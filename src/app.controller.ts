@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common'
+import { Body, Controller, Logger, Post } from '@nestjs/common'
 import { SocketGateway } from './websocket/socket.gateway'
 
 import { SetThemeBody } from './app.dto'
@@ -10,6 +10,7 @@ export class AppController {
   @Post('setTheme')
   async setTheme(@Body() body: SetThemeBody) {
     this.socketGateway.sendToAllClient('server', body.theme)
+    Logger.log(`设置主题${body.theme}`)
     return 'ok'
   }
 }
