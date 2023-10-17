@@ -13,7 +13,7 @@ COPY . .
 RUN yarn
 
 RUN npm run build
-
+  
 # 删除开发期依赖
 RUN rm -rf node_modules
 # 安装生产环境依赖
