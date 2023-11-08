@@ -25,6 +25,11 @@ let AppController = class AppController {
         common_1.Logger.log(`设置主题${body.theme}`);
         return 'ok';
     }
+    async setExpert(body) {
+        this.socketGateway.sendToAllClient('expert', body.name);
+        common_1.Logger.log(`设置主题${body.name}`);
+        return 'ok';
+    }
     test() {
         return 'hello world';
     }
@@ -37,6 +42,13 @@ __decorate([
     __metadata("design:paramtypes", [app_dto_1.SetThemeBody]),
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "setTheme", null);
+__decorate([
+    (0, common_1.Post)('setExpert'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [app_dto_1.SetExpertBody]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "setExpert", null);
 __decorate([
     (0, common_1.Get)(''),
     __metadata("design:type", Function),

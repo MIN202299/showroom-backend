@@ -1,4 +1,4 @@
-import { IsEnum } from 'class-validator'
+import { IsEnum, IsString } from 'class-validator'
 
 enum Theme {
   DEFAULT,
@@ -9,4 +9,9 @@ enum Theme {
 export class SetThemeBody {
   @IsEnum(Theme)
   theme: Theme
+}
+
+export class SetExpertBody {
+  @IsString()
+  name: string
 }

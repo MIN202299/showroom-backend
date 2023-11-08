@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Logger, Post } from '@nestjs/common'
 import { SocketGateway } from './websocket/socket.gateway'
 
-import { SetThemeBody } from './app.dto'
+import { SetExpertBody, SetThemeBody } from './app.dto'
 
 @Controller()
 export class AppController {
@@ -11,6 +11,13 @@ export class AppController {
   async setTheme(@Body() body: SetThemeBody) {
     this.socketGateway.sendToAllClient('server', body.theme)
     Logger.log(`设置主题${body.theme}`)
+    return 'ok'
+  }
+
+  @Post('setExpert')
+  async setExpert(@Body() body: SetExpertBody) {
+    this.socketGateway.sendToAllClient('expert', body.name)
+    Logger.log(`设置主题${body.name}`)
     return 'ok'
   }
 

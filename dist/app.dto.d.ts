@@ -6,4 +6,7 @@ declare enum Theme {
 export declare class SetThemeBody {
     theme: Theme;
 }
+export declare class SetExpertBody {
+    name: string;
+}
 export {};
