@@ -9,4 +9,8 @@ export declare class SetThemeBody {
 export declare class SetExpertBody {
     name: string;
 }
+export declare class UploadChunk {
+    md5: string;
+    num: number;
+}
 export {};

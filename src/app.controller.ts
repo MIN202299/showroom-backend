@@ -1,11 +1,27 @@
-import { Body, Controller, Get, Logger, Post } from '@nestjs/common'
+import path from 'node:path'
+import process from 'node:process'
+import fs from 'node:fs'
+import { Body, Controller, Get, Logger, Post, UploadedFile, UseInterceptors } from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { Express } from 'express'
+import { diskStorage, memoryStorage } from 'multer'
 import { SocketGateway } from './websocket/socket.gateway'
-
-import { SetExpertBody, SetThemeBody } from './app.dto'
+import { SetExpertBody, SetThemeBody, UploadChunk } from './app.dto'
+import { UploadService } from './upload.service'
+import { MAX_SIZE, SPLIT_MAX_SIZE, UPLOAD_DIR } from './constants/upload'
+import { setResponse } from './utils'
 
 @Controller()
 export class AppController {
-  constructor(private readonly socketGateway: SocketGateway) {}
+  constructor(
+    private readonly socketGateway: SocketGateway,
+    private readonly uploadService: UploadService,
+  ) {}
+
+  @Get('')
+  test() {
+    return 'hello world'
+  }
 
   @Post('setTheme')
   async setTheme(@Body() body: SetThemeBody) {
@@ -21,8 +37,53 @@ export class AppController {
     return 'ok'
   }
 
-  @Get('')
-  test() {
-    return 'hello world'
+  @Post('splitUpload')
+  // 分片上传使用自定义上传
+  @UseInterceptors(FileInterceptor('file', {
+    storage: memoryStorage(),
+    limits: {
+      fileSize: SPLIT_MAX_SIZE,
+    },
+  }))
+  async handleSplitUpload(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: UploadChunk,
+  ) {
+    return this.uploadService.uploadChunk(file, body)
+  }
+
+  @Post('merge')
+  async handleMerge() {}
+
+  // todo 文件存在时直接返回
+  //     - 能否拦截multer自动保存存文件
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file', {
+    storage: diskStorage({
+      destination: (req, file, cb) => {
+        // req.body() = {} 这里获取不到请求参数？？
+        // console.log(req.body)
+        const publicPath = path.resolve(process.cwd(), UPLOAD_DIR)
+        if (!fs.existsSync(publicPath))
+          fs.mkdirSync(publicPath, { recursive: true })
+        cb(null, publicPath)
+      },
+      filename: (req, file, cb) => {
+        cb(null, file.originalname)
+      },
+    }),
+    limits: {
+      fileSize: MAX_SIZE,
+    },
+    fileFilter: (req, file, cb) => {
+      cb(null, true)
+    },
+  }))
+  async handleUpload(@UploadedFile() file: Express.Multer.File) {
+    const uri = `${UPLOAD_DIR}/${file.originalname}`
+    return setResponse({
+      uri,
+      fileUrl: `${process.env.PUBLIC_PATH}/${uri}`,
+    })
   }
 }

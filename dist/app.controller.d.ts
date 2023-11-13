@@ -1,9 +1,18 @@
+/// <reference types="multer" />
 import { SocketGateway } from './websocket/socket.gateway';
-import { SetExpertBody, SetThemeBody } from './app.dto';
+import { SetExpertBody, SetThemeBody, UploadChunk } from './app.dto';
+import { UploadService } from './upload.service';
 export declare class AppController {
     private readonly socketGateway;
-    constructor(socketGateway: SocketGateway);
+    private readonly uploadService;
+    constructor(socketGateway: SocketGateway, uploadService: UploadService);
+    test(): string;
     setTheme(body: SetThemeBody): Promise<string>;
     setExpert(body: SetExpertBody): Promise<string>;
-    test(): string;
+    handleSplitUpload(file: Express.Multer.File, body: UploadChunk): Promise<import("./utils").ResponseData<string>>;
+    handleMerge(): Promise<void>;
+    handleUpload(file: Express.Multer.File): Promise<import("./utils").ResponseData<{
+        uri: string;
+        fileUrl: string;
+    }>>;
 }
