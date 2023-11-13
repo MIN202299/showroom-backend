@@ -48,13 +48,18 @@ let AppController = class AppController {
     async handleSplitUpload(file, body) {
         return this.uploadService.uploadChunk(file, body);
     }
-    async handleMerge() { }
+    async handleMerge(body) {
+        return this.uploadService.mergeChunk(body);
+    }
     async handleUpload(file) {
         const uri = `${upload_1.UPLOAD_DIR}/${file.originalname}`;
         return (0, utils_1.setResponse)({
             uri,
             fileUrl: `${node_process_1.default.env.PUBLIC_PATH}/${uri}`,
         });
+    }
+    async handlePreUpload(body) {
+        return this.uploadService.handlePreUpload(body);
     }
 };
 exports.AppController = AppController;
@@ -83,7 +88,7 @@ __decorate([
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file', {
         storage: (0, multer_1.memoryStorage)(),
         limits: {
-            fileSize: upload_1.SPLIT_MAX_SIZE,
+            fileSize: upload_1.MAX_FILE_SIZE,
         },
     })),
     __param(0, (0, common_1.UploadedFile)()),
@@ -94,8 +99,9 @@ __decorate([
 ], AppController.prototype, "handleSplitUpload", null);
 __decorate([
     (0, common_1.Post)('merge'),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [app_dto_1.MergeChunk]),
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "handleMerge", null);
 __decorate([
@@ -113,7 +119,7 @@ __decorate([
             },
         }),
         limits: {
-            fileSize: upload_1.MAX_SIZE,
+            fileSize: upload_1.MAX_FILE_SIZE,
         },
         fileFilter: (req, file, cb) => {
             cb(null, true);
@@ -124,6 +130,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "handleUpload", null);
+__decorate([
+    (0, common_1.Post)('preUpload'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [app_dto_1.PreUploadChunk]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "handlePreUpload", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [socket_gateway_1.SocketGateway,

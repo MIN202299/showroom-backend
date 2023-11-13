@@ -9,9 +9,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UploadChunk = exports.SetExpertBody = exports.SetThemeBody = void 0;
+exports.PreUploadChunk = exports.MergeChunk = exports.UploadChunk = exports.SetExpertBody = exports.SetThemeBody = void 0;
 const class_validator_1 = require("class-validator");
-const class_transformer_1 = require("class-transformer");
 var Theme;
 (function (Theme) {
     Theme[Theme["DEFAULT"] = 0] = "DEFAULT";
@@ -36,14 +35,49 @@ class UploadChunk {
 }
 exports.UploadChunk = UploadChunk;
 __decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: '请上传文件md5' }),
+    (0, class_validator_1.IsNotEmpty)({ message: '请上传文件hash' }),
     (0, class_validator_1.IsHash)('md5'),
     __metadata("design:type", String)
-], UploadChunk.prototype, "md5", void 0);
+], UploadChunk.prototype, "hash", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: '请上传文件序号' }),
-    (0, class_transformer_1.Type)(() => Number),
+    (0, class_validator_1.IsNotEmpty)({ message: '请上传分片名称' }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UploadChunk.prototype, "hashName", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({ message: '请上传文件名称' }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UploadChunk.prototype, "filename", void 0);
+class MergeChunk {
+}
+exports.MergeChunk = MergeChunk;
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({ message: '请上传文件名称' }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], MergeChunk.prototype, "filename", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({ message: '请上传文件hash' }),
+    (0, class_validator_1.IsHash)('md5'),
+    __metadata("design:type", String)
+], MergeChunk.prototype, "hash", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({ message: '请上传分片大小' }),
     (0, class_validator_1.IsInt)(),
     __metadata("design:type", Number)
-], UploadChunk.prototype, "num", void 0);
+], MergeChunk.prototype, "chunkSize", void 0);
+class PreUploadChunk {
+}
+exports.PreUploadChunk = PreUploadChunk;
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({ message: '请上传文件名称' }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], PreUploadChunk.prototype, "filename", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({ message: '请上传文件hash' }),
+    (0, class_validator_1.IsHash)('md5'),
+    __metadata("design:type", String)
+], PreUploadChunk.prototype, "hash", void 0);
 //# sourceMappingURL=app.dto.js.map

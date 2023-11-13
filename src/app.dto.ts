@@ -1,5 +1,4 @@
 import { IsEnum, IsHash, IsInt, IsNotEmpty, IsString } from 'class-validator'
-import { Type } from 'class-transformer'
 
 enum Theme {
   DEFAULT,
@@ -18,12 +17,39 @@ export class SetExpertBody {
 }
 
 export class UploadChunk {
-  @IsNotEmpty({ message: '请上传文件md5' })
+  @IsNotEmpty({ message: '请上传文件hash' })
   @IsHash('md5')
-  md5: string
+  hash: string
 
-  @IsNotEmpty({ message: '请上传文件序号' })
-  @Type(() => Number)
+  @IsNotEmpty({ message: '请上传分片名称' })
+  @IsString()
+  hashName: string
+
+  @IsNotEmpty({ message: '请上传文件名称' })
+  @IsString()
+  filename: string
+}
+
+export class MergeChunk {
+  @IsNotEmpty({ message: '请上传文件名称' })
+  @IsString()
+  filename: string
+
+  @IsNotEmpty({ message: '请上传文件hash' })
+  @IsHash('md5')
+  hash: string
+
+  @IsNotEmpty({ message: '请上传分片大小' })
   @IsInt()
-  num: number
+  chunkSize: number
+}
+
+export class PreUploadChunk {
+  @IsNotEmpty({ message: '请上传文件名称' })
+  @IsString()
+  filename: string
+
+  @IsNotEmpty({ message: '请上传文件hash' })
+  @IsHash('md5')
+  hash: string
 }

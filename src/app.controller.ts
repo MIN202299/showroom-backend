@@ -6,9 +6,9 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import { Express } from 'express'
 import { diskStorage, memoryStorage } from 'multer'
 import { SocketGateway } from './websocket/socket.gateway'
-import { SetExpertBody, SetThemeBody, UploadChunk } from './app.dto'
+import { MergeChunk, PreUploadChunk, SetExpertBody, SetThemeBody, UploadChunk } from './app.dto'
 import { UploadService } from './upload.service'
-import { MAX_SIZE, SPLIT_MAX_SIZE, UPLOAD_DIR } from './constants/upload'
+import { MAX_FILE_SIZE, UPLOAD_DIR } from './constants/upload'
 import { setResponse } from './utils'
 
 @Controller()
@@ -42,7 +42,7 @@ export class AppController {
   @UseInterceptors(FileInterceptor('file', {
     storage: memoryStorage(),
     limits: {
-      fileSize: SPLIT_MAX_SIZE,
+      fileSize: MAX_FILE_SIZE,
     },
   }))
   async handleSplitUpload(
@@ -53,7 +53,9 @@ export class AppController {
   }
 
   @Post('merge')
-  async handleMerge() {}
+  async handleMerge(@Body() body: MergeChunk) {
+    return this.uploadService.mergeChunk(body)
+  }
 
   // todo 文件存在时直接返回
   //     - 能否拦截multer自动保存存文件
@@ -73,17 +75,25 @@ export class AppController {
       },
     }),
     limits: {
-      fileSize: MAX_SIZE,
+      fileSize: MAX_FILE_SIZE,
     },
     fileFilter: (req, file, cb) => {
       cb(null, true)
     },
   }))
+
   async handleUpload(@UploadedFile() file: Express.Multer.File) {
     const uri = `${UPLOAD_DIR}/${file.originalname}`
+
     return setResponse({
       uri,
       fileUrl: `${process.env.PUBLIC_PATH}/${uri}`,
     })
+  }
+
+  // 上传前校验
+  @Post('preUpload')
+  async handlePreUpload(@Body() body: PreUploadChunk) {
+    return this.uploadService.handlePreUpload(body)
   }
 }

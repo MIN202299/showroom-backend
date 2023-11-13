@@ -10,7 +10,17 @@ export declare class SetExpertBody {
     name: string;
 }
 export declare class UploadChunk {
-    md5: string;
-    num: number;
+    hash: string;
+    hashName: string;
+    filename: string;
+}
+export declare class MergeChunk {
+    filename: string;
+    hash: string;
+    chunkSize: number;
+}
+export declare class PreUploadChunk {
+    filename: string;
+    hash: string;
 }
 export {};
