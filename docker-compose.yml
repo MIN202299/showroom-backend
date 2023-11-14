@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  backend:
+    restart: always
+    build: 
+      context: .
+      dockerfile: Dockerfile.backend
+    image: showroom-backend
+    container_name: backend
+    ports:
+      - 8421:8421
+      - 8422:8422
+
+    volumes:
+      - /d/dockerData/showroom-backend/upload:/showroom-backend/public/upload
+    
+    environment:
+      - PUBLIC_PATH=http://192.168.2.125/static
+
+  fileProxy:
+    restart: always
+    build: 
+      context: .
+      dockerfile: Dockerfile.file-proxy
+    
+    image: file-proxy
+    container_name: file-proxy
+    depends_on:
+      - backend
+
+    ports:
+      - 80:80
+
+    volumes:
+      - /d/dockerData/showroom-backend/upload:/app/upload
