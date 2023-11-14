@@ -52,6 +52,12 @@ export class UploadService {
       readStream.on('end', async () => {
         await fs.unlinkSync(chunkPath)
       })
+      readStream.on('error', () => {
+        throw new BadRequestException(new Error('合并失败, 请重新上传'))
+      })
+      writeStream.on('error', () => {
+        throw new BadRequestException(new Error('合并失败, 请重新上传'))
+      })
       readStream.pipe(writeStream)
     })
     return setResponse({
