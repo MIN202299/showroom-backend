@@ -6,10 +6,9 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import { Express } from 'express'
 import { diskStorage, memoryStorage } from 'multer'
 import { SocketGateway } from './websocket/socket.gateway'
-import { MergeChunk, PreUploadChunk, SetExpertBody, SetThemeBody, UploadChunk } from './app.dto'
+import { MergeChunk, PreUploadChunk, SetExpertBody, SetThemeBody, UploadChunk, UploadTinyFile } from './app.dto'
 import { UploadService } from './upload.service'
 import { MAX_FILE_SIZE, UPLOAD_DIR } from './constants/upload'
-import { setResponse } from './utils'
 
 @Controller()
 export class AppController {
@@ -82,13 +81,8 @@ export class AppController {
     },
   }))
 
-  async handleUpload(@UploadedFile() file: Express.Multer.File) {
-    const uri = `${UPLOAD_DIR}/${file.originalname}`
-
-    return setResponse({
-      uri,
-      fileUrl: `${process.env.PUBLIC_PATH}/${uri}`,
-    })
+  async handleUploadTinyFile(@UploadedFile() file: Express.Multer.File, @Body() body: UploadTinyFile) {
+    return this.uploadService.handleUploadTinyFile(file, body)
   }
 
   // 上传前校验

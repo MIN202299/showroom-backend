@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PreUploadChunk = exports.MergeChunk = exports.UploadChunk = exports.SetExpertBody = exports.SetThemeBody = void 0;
+exports.UploadTinyFile = exports.PreUploadChunk = exports.MergeChunk = exports.UploadChunk = exports.SetExpertBody = exports.SetThemeBody = void 0;
 const class_validator_1 = require("class-validator");
 var Theme;
 (function (Theme) {
@@ -80,4 +80,12 @@ __decorate([
     (0, class_validator_1.IsHash)('md5'),
     __metadata("design:type", String)
 ], PreUploadChunk.prototype, "hash", void 0);
+class UploadTinyFile {
+}
+exports.UploadTinyFile = UploadTinyFile;
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({ message: '请上传文件hash' }),
+    (0, class_validator_1.IsHash)('md5'),
+    __metadata("design:type", String)
+], UploadTinyFile.prototype, "hash", void 0);
 //# sourceMappingURL=app.dto.js.map

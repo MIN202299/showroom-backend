@@ -23,4 +23,7 @@ export declare class PreUploadChunk {
     filename: string;
     hash: string;
 }
+export declare class UploadTinyFile {
+    hash: string;
+}
 export {};

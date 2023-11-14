@@ -53,3 +53,9 @@ export class PreUploadChunk {
   @IsHash('md5')
   hash: string
 }
+
+export class UploadTinyFile {
+  @IsNotEmpty({ message: '请上传文件hash' })
+  @IsHash('md5')
+  hash: string
+}

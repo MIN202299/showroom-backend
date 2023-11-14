@@ -26,7 +26,6 @@ const socket_gateway_1 = require("./websocket/socket.gateway");
 const app_dto_1 = require("./app.dto");
 const upload_service_1 = require("./upload.service");
 const upload_1 = require("./constants/upload");
-const utils_1 = require("./utils");
 let AppController = class AppController {
     constructor(socketGateway, uploadService) {
         this.socketGateway = socketGateway;
@@ -51,12 +50,8 @@ let AppController = class AppController {
     async handleMerge(body) {
         return this.uploadService.mergeChunk(body);
     }
-    async handleUpload(file) {
-        const uri = `${upload_1.UPLOAD_DIR}/${file.originalname}`;
-        return (0, utils_1.setResponse)({
-            uri,
-            fileUrl: `${node_process_1.default.env.PUBLIC_PATH}/${uri}`,
-        });
+    async handleUploadTinyFile(file, body) {
+        return this.uploadService.handleUploadTinyFile(file, body);
     }
     async handlePreUpload(body) {
         return this.uploadService.handlePreUpload(body);
@@ -126,10 +121,11 @@ __decorate([
         },
     })),
     __param(0, (0, common_1.UploadedFile)()),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, app_dto_1.UploadTinyFile]),
     __metadata("design:returntype", Promise)
-], AppController.prototype, "handleUpload", null);
+], AppController.prototype, "handleUploadTinyFile", null);
 __decorate([
     (0, common_1.Post)('preUpload'),
     __param(0, (0, common_1.Body)()),

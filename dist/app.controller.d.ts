@@ -1,6 +1,6 @@
 /// <reference types="multer" />
 import { SocketGateway } from './websocket/socket.gateway';
-import { MergeChunk, PreUploadChunk, SetExpertBody, SetThemeBody, UploadChunk } from './app.dto';
+import { MergeChunk, PreUploadChunk, SetExpertBody, SetThemeBody, UploadChunk, UploadTinyFile } from './app.dto';
 import { UploadService } from './upload.service';
 export declare class AppController {
     private readonly socketGateway;
@@ -14,7 +14,7 @@ export declare class AppController {
         uri: string;
         fileUrl: string;
     }>>;
-    handleUpload(file: Express.Multer.File): Promise<import("./utils").ResponseData<{
+    handleUploadTinyFile(file: Express.Multer.File, body: UploadTinyFile): Promise<import("./utils").ResponseData<{
         uri: string;
         fileUrl: string;
     }>>;
