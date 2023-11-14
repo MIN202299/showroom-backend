@@ -26,48 +26,19 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
+## Build Docker
 
-```bash
-$ yarn install
-```
+**backend**
+docker build -f Dockerfile.backend -t showroom-backend .
+docker tag showroom-backend registry.cn-hangzhou.aliyuncs.com/dcwjoy/showroom-backend:latest
+docker push registry.cn-hangzhou.aliyuncs.com/dcwjoy/showroom-backend:latest
 
-## Running the app
 
-```bash
-# development
-$ yarn run start
+**fileproxy**
+docker build -f Dockerfile.file-proxy -t file-proxy . 
+docker tag file-proxy registry.cn-hangzhou.aliyuncs.com/dcwjoy/file-proxy:latest 
+docker push registry.cn-hangzhou.aliyuncs.com/dcwjoy/file-proxy:latest  
 
-# watch mode
-$ yarn run start:dev
+## Bug
 
-# production mode
-$ yarn run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+使用docker合并文件后，文件可能损坏

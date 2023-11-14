@@ -6,7 +6,7 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile.backend
-    image: showroom-backend
+    image: registry.cn-hangzhou.aliyuncs.com/dcwjoy/showroom-backend:latest
     container_name: backend
     ports:
       - 8421:8421
@@ -24,7 +24,7 @@ services:
       context: .
       dockerfile: Dockerfile.file-proxy
     
-    image: file-proxy
+    image: registry.cn-hangzhou.aliyuncs.com/dcwjoy/file-proxy:latest
     container_name: file-proxy
     depends_on:
       - backend
