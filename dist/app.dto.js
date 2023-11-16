@@ -67,6 +67,16 @@ __decorate([
     (0, class_validator_1.IsInt)(),
     __metadata("design:type", Number)
 ], MergeChunk.prototype, "chunkSize", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({ message: '请上传文件mimeType' }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], MergeChunk.prototype, "mimeType", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({ message: '请上传文件大小' }),
+    (0, class_validator_1.IsInt)(),
+    __metadata("design:type", Number)
+], MergeChunk.prototype, "size", void 0);
 class PreUploadChunk {
 }
 exports.PreUploadChunk = PreUploadChunk;

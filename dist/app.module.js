@@ -13,9 +13,17 @@ exports.AppModule = void 0;
 const node_process_1 = __importDefault(require("node:process"));
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
+const mongoose_1 = require("@nestjs/mongoose");
 const app_controller_1 = require("./app.controller");
 const socket_gateway_1 = require("./websocket/socket.gateway");
 const upload_service_1 = require("./upload.service");
+const file_module_1 = __importDefault(require("./modules/file/file.module"));
+const config_module_1 = __importDefault(require("./modules/config/config.module"));
+const host = 'localhost';
+const port = '27017';
+const db = 'showroom';
+const user = 'admin';
+const password = '123456';
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -26,6 +34,15 @@ exports.AppModule = AppModule = __decorate([
                 isGlobal: true,
                 envFilePath: node_process_1.default.env.NODE_ENV === 'production' ? '.env.prod' : '.env',
             }),
+            mongoose_1.MongooseModule.forRoot(`mongodb://${host}:${port}/`, {
+                auth: {
+                    username: user,
+                    password,
+                },
+                dbName: db,
+            }),
+            file_module_1.default,
+            config_module_1.default,
         ],
         controllers: [app_controller_1.AppController],
         providers: [socket_gateway_1.SocketGateway, upload_service_1.UploadService],

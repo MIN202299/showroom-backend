@@ -7,10 +7,13 @@ import type { MergeChunk, PreUploadChunk, UploadChunk, UploadTinyFile } from './
 import { setResponse } from './utils'
 import { moveFile } from './utils/upload'
 import { UPLOAD_DIR } from './constants/upload'
+import { FileService } from './modules/file/file.service'
 
 @Injectable()
 export class UploadService {
-  constructor() {}
+  constructor(
+    private readonly fileService: FileService,
+  ) {}
 
   async uploadChunk(file: Express.Multer.File, body: UploadChunk) {
     const fileDir = path.join(process.cwd(), UPLOAD_DIR, body.hash)
@@ -60,6 +63,15 @@ export class UploadService {
       })
       readStream.pipe(writeStream)
     })
+    // 保存到数据库
+    await this.fileService.add({
+      filename: body.filename,
+      mimeType: body.mimeType,
+      size: body.size,
+      hash: body.hash,
+      uri,
+    })
+
     return setResponse({
       uri,
       fileUrl: `${process.env.PUBLIC_PATH}/${uri}`,
@@ -108,6 +120,15 @@ export class UploadService {
     }
 
     moveFile(path.join(file.destination, file.originalname), filepath)
+
+    // 保存到数据库
+    await this.fileService.add({
+      filename: file.originalname,
+      mimeType: file.mimetype,
+      size: file.size,
+      hash: body.hash,
+      uri,
+    })
 
     return setResponse({
       uri,

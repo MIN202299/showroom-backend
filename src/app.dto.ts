@@ -42,6 +42,14 @@ export class MergeChunk {
   @IsNotEmpty({ message: '请上传分片大小' })
   @IsInt()
   chunkSize: number
+
+  @IsNotEmpty({ message: '请上传文件mimeType' })
+  @IsString()
+  mimeType: string
+
+  @IsNotEmpty({ message: '请上传文件大小' })
+  @IsInt()
+  size: number
 }
 
 export class PreUploadChunk {

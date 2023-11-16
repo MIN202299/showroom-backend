@@ -34,3 +34,19 @@ services:
 
     volumes:
       - /d/dockerData/showroom-backend/upload:/app/upload
+      # 将nginx配置文件映射到本地不生效
+      # - /d/dockerData/showroom-backend/conf:/etc/nginx/conf.d
+
+  store:
+    restart: always
+    image: mongo
+    container_name: mongo-db
+    ports:
+      - 27017:27017
+    command: [--auth]
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+    volumes:
+      - /d/dockerData/showroom-backend/mongo:/data/db
+    

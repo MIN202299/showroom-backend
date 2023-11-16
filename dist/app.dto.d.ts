@@ -18,6 +18,8 @@ export declare class MergeChunk {
     filename: string;
     hash: string;
     chunkSize: number;
+    mimeType: string;
+    size: number;
 }
 export declare class PreUploadChunk {
     filename: string;
