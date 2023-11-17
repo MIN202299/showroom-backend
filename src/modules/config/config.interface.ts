@@ -1,11 +1,13 @@
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator'
+import { IsInt, IsNotEmpty, IsString } from 'class-validator'
 import type { Document } from 'mongoose'
-import { TemplatesEnum } from 'src/schemas/config.schema'
+
+// update 防止后面添加配置麻烦
+// import { TemplatesEnum } from 'src/schemas/config.schema'
 
 export interface Config extends Document {
   readonly _id: string
   readonly themeName: string
-  readonly themeType: TemplatesEnum
+  readonly themeType: number
   readonly detail: string
 }
 
@@ -15,8 +17,8 @@ export class ConfigDTO {
   themeName: string
 
   @IsNotEmpty({ message: '请上传文件主题类型' })
-  @IsEnum(TemplatesEnum)
-  themeType: TemplatesEnum
+  @IsInt()
+  themeType: number
 
   @IsNotEmpty({ message: '请上传配置' })
   @IsString()
