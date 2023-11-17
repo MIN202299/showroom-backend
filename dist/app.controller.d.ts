@@ -26,9 +26,6 @@ export declare class AppController {
         };
     }> | import("./utils").ResponseData<{
         shouldUpload: boolean;
-        chunksName: any[];
-    }> | import("./utils").ResponseData<{
-        shouldUpload: boolean;
-        existChunkName: string[];
+        existChunkName: any[];
     }>>;
 }

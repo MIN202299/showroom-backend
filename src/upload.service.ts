@@ -94,7 +94,7 @@ export class UploadService {
     if (!fs.existsSync(fileDir)) {
       return setResponse({
         shouldUpload: true,
-        chunksName: [],
+        existChunkName: [],
       })
     }
     const filenames: string[] = fs.readdirSync(fileDir)
@@ -106,7 +106,7 @@ export class UploadService {
 
   async handleUploadTinyFile(file: Express.Multer.File, body: UploadTinyFile) {
     const fileDir = path.join(process.cwd(), UPLOAD_DIR, body.hash)
-    const filepath = path.join(fileDir, file.originalname)
+    const filepath = path.join(fileDir, decodeURIComponent(file.originalname))
     const uri = `${UPLOAD_DIR}/${body.hash}/${file.originalname}`
 
     if (!fs.existsSync(fileDir))
@@ -123,7 +123,7 @@ export class UploadService {
 
     // 保存到数据库
     await this.fileService.add({
-      filename: file.originalname,
+      filename: decodeURIComponent(file.originalname),
       mimeType: file.mimetype,
       size: file.size,
       hash: body.hash,
