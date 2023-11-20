@@ -1,4 +1,4 @@
-import { IsEnum, IsHash, IsInt, IsNotEmpty, IsString } from 'class-validator'
+import { IsHash, IsInt, IsNotEmpty, IsString } from 'class-validator'
 
 enum Theme {
   DEFAULT,
@@ -7,7 +7,8 @@ enum Theme {
 }
 
 export class SetThemeBody {
-  @IsEnum(Theme)
+  @IsNotEmpty({ message: '请上传主题名称' })
+  @IsString()
   theme: Theme
 }
 

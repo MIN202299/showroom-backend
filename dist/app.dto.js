@@ -21,7 +21,8 @@ class SetThemeBody {
 }
 exports.SetThemeBody = SetThemeBody;
 __decorate([
-    (0, class_validator_1.IsEnum)(Theme),
+    (0, class_validator_1.IsNotEmpty)({ message: '请上传主题名称' }),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", Number)
 ], SetThemeBody.prototype, "theme", void 0);
 class SetExpertBody {
