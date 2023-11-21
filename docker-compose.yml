@@ -30,6 +30,8 @@ services:
         ipv4_address: 172.19.0.2
         aliases:
           - showroom-backend-ip
+    environment:
+      - PUBLIC_PATH=http://192.168.1.69:8421
 
   fileproxy:
     restart: always
