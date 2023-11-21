@@ -1,19 +1,12 @@
 version: '3'
 
-networks:
-  custom-net:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.19.0.0/24
-
 services:
   backend:
     restart: always
     build: 
       context: .
       dockerfile: Dockerfile.backend
-    image: showroom-backend
+    image: registry.cn-hangzhou.aliyuncs.com/dcwjoy/showroom-backend:latest
     container_name: backend
     ports:
       - 8421:8421
@@ -22,22 +15,16 @@ services:
     volumes:
       - /d/dockerData/showroom-backend/upload:/showroom-backend/public/upload
     
-    depends_on:
-      - db
-    
-    networks:
-      custom-net:
-        ipv4_address: 172.19.0.2
-        aliases:
-          - showroom-backend-ip
+    environment:
+      - PUBLIC_PATH=http://192.168.2.125/static
 
-  fileproxy:
+  fileProxy:
     restart: always
     build: 
       context: .
-      dockerfile: Dockerfile.fileproxy
+      dockerfile: Dockerfile.file-proxy
     
-    image: file-proxy
+    image: registry.cn-hangzhou.aliyuncs.com/dcwjoy/file-proxy:latest
     container_name: file-proxy
     depends_on:
       - backend
@@ -48,15 +35,9 @@ services:
     volumes:
       - /d/dockerData/showroom-backend/upload:/app/upload
       # 将nginx配置文件映射到本地不生效
-      # - /d/dockerData/showroom-backend/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    
-    networks:
-      custom-net:
-        ipv4_address: 172.19.0.3
-        aliases:
-          - fileproxy-ip
+      # - /d/dockerData/showroom-backend/conf:/etc/nginx/conf.d
 
-  db:
+  store:
     restart: always
     image: mongo
     container_name: mongo-db
@@ -68,11 +49,4 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=123456
     volumes:
       - /d/dockerData/showroom-backend/mongo:/data/db
-
-    networks:
-      custom-net:
-        ipv4_address: 172.19.0.4
-        aliases:
-          - db-ip
     
-# docker compose -f docker-compose.yml

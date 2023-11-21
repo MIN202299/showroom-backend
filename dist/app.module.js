@@ -19,6 +19,8 @@ const socket_gateway_1 = require("./websocket/socket.gateway");
 const upload_service_1 = require("./upload.service");
 const file_module_1 = __importDefault(require("./modules/file/file.module"));
 const config_module_1 = __importDefault(require("./modules/config/config.module"));
+const mongo_config_dev_1 = __importDefault(require("./configs/mongo.config.dev"));
+const mongo_config_prod_1 = __importDefault(require("./configs/mongo.config.prod"));
 const host = 'localhost';
 const port = '27017';
 const db = 'showroom';
@@ -33,13 +35,10 @@ exports.AppModule = AppModule = __decorate([
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
                 envFilePath: node_process_1.default.env.NODE_ENV === 'production' ? '.env.prod' : '.env',
+                load: [mongo_config_dev_1.default, mongo_config_prod_1.default],
             }),
-            mongoose_1.MongooseModule.forRoot(`mongodb://${host}:${port}/`, {
-                auth: {
-                    username: user,
-                    password,
-                },
-                dbName: db,
+            mongoose_1.MongooseModule.forRootAsync({
+                useFactory: node_process_1.default.env.NODE_ENV === 'production' ? mongo_config_prod_1.default : mongo_config_dev_1.default,
             }),
             file_module_1.default,
             config_module_1.default,
