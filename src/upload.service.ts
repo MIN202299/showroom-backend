@@ -5,7 +5,7 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import type { Express } from 'express'
 import type { MergeChunk, PreUploadChunk, UploadChunk, UploadTinyFile } from './app.dto'
 import { setResponse } from './utils'
-import { moveFile } from './utils/upload'
+import { mergeFileChunk, moveFile } from './utils/upload'
 import { UPLOAD_DIR } from './constants/upload'
 import { FileService } from './modules/file/file.service'
 
@@ -40,29 +40,12 @@ export class UploadService {
     if (!fs.existsSync(fileDir))
       throw new BadRequestException(new Error('合并失败, 请重新上传'))
 
-    const filenames: string[] = fs.readdirSync(fileDir)
-
-    filenames.sort((name1, name2) => {
-      return Number(name1.split('-')[1]) - Number(name2.split('-')[1])
-    })
-
-    filenames.forEach((name, idx) => {
-      const chunkPath = path.join(fileDir, name)
-      const readStream = fs.createReadStream(chunkPath)
-      const writeStream = fs.createWriteStream(filepath, {
-        start: idx * body.chunkSize,
-      })
-      readStream.on('end', async () => {
-        await fs.unlinkSync(chunkPath)
-      })
-      readStream.on('error', () => {
-        throw new BadRequestException(new Error('合并失败, 请重新上传'))
-      })
-      writeStream.on('error', () => {
-        throw new BadRequestException(new Error('合并失败, 请重新上传'))
-      })
-      readStream.pipe(writeStream)
-    })
+    try {
+      await mergeFileChunk(fileDir, filepath, body.hash, body.chunkSize)
+    }
+    catch (err) {
+      throw new BadRequestException(err)
+    }
     // 保存到数据库
     await this.fileService.add({
       filename: body.filename,
