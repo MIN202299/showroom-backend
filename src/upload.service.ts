@@ -16,7 +16,7 @@ export class UploadService {
   ) {}
 
   async uploadChunk(file: Express.Multer.File, body: UploadChunk) {
-    const fileDir = path.join(process.cwd(), UPLOAD_DIR, body.hash)
+    const fileDir = path.resolve(process.cwd(), UPLOAD_DIR, body.hash)
     const filepath = path.join(fileDir, body.hashName)
     if (!fs.existsSync(fileDir))
       fs.mkdirSync(fileDir, { recursive: true })
@@ -27,7 +27,7 @@ export class UploadService {
   }
 
   async mergeChunk(body: MergeChunk) {
-    const fileDir = path.join(process.cwd(), UPLOAD_DIR, body.hash)
+    const fileDir = path.resolve(process.cwd(), UPLOAD_DIR, body.hash)
     const filepath = path.join(fileDir, body.filename)
     const uri = `${UPLOAD_DIR}/${body.hash}/${body.filename}`
 
@@ -62,7 +62,7 @@ export class UploadService {
   }
 
   async handlePreUpload(body: PreUploadChunk) {
-    const fileDir = path.join(process.cwd(), UPLOAD_DIR, body.hash)
+    const fileDir = path.resolve(process.cwd(), UPLOAD_DIR, body.hash)
     const filepath = path.join(fileDir, body.filename)
     const uri = `${UPLOAD_DIR}/${body.hash}/${body.filename}`
     if (fs.existsSync(filepath)) {
@@ -88,7 +88,7 @@ export class UploadService {
   }
 
   async handleUploadTinyFile(file: Express.Multer.File, body: UploadTinyFile) {
-    const fileDir = path.join(process.cwd(), UPLOAD_DIR, body.hash)
+    const fileDir = path.resolve(process.cwd(), UPLOAD_DIR, body.hash)
     const filepath = path.join(fileDir, decodeURIComponent(file.originalname))
     const uri = `${UPLOAD_DIR}/${body.hash}/${file.originalname}`
 
